@@ -1,0 +1,223 @@
+openapi: 3.1.0
+info:
+  title: Contact API
+  version: 1.0.0
+  description: お問い合わせAPI
+servers:
+  - url: http://localhost:3000
+    description: Development server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        type:
+          type: string
+          enum:
+            - product
+            - technical
+            - general
+        status:
+          type: string
+          enum:
+            - received
+            - inProgress
+            - resolved
+            - closed
+          default: received
+        assigned_staff_id:
+          type: string
+        created_at:
+          type: string
+          minLength: 1
+        updated_at:
+          type: string
+          minLength: 1
+        user_id:
+          type: string
+        product_name:
+          type: string
+        purchase_date:
+          type: string
+        recommended_actions:
+          type: string
+        environment_os:
+          type: string
+        environment_browser:
+          type: string
+        environment_version:
+          type: string
+        error_message:
+          type: string
+        support_memo:
+          type: string
+        subject:
+          type: string
+        response_note:
+          type: string
+        notes:
+          type: string
+      required:
+        - id
+        - type
+        - created_at
+        - updated_at
+  parameters: {}
+paths:
+  /contact:
+    get:
+      description: お問い合わせ一覧を取得する
+      summary: お問い合わせ一覧取得
+      security:
+        - bearerAuth: []
+      parameters:
+        - schema:
+            type: integer
+            default: 10
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: integer
+            minimum: 0
+            default: 0
+          required: false
+          name: offset
+          in: query
+        - schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+          required: false
+          name: sort
+          in: query
+      responses:
+        "200":
+          description: お問い合わせ一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contact"
+    post:
+      description: お問い合わせを登録する
+      summary: お問い合わせ登録
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    email:
+                      type: string
+                      format: email
+                    phone:
+                      type: string
+                      pattern: ^[0-9-]{10,}$
+                    type:
+                      type: string
+                      enum:
+                        - product
+                    productName:
+                      type: string
+                      minLength: 1
+                    purchaseDate:
+                      type: string
+                      pattern: ^\d{4}-\d{2}-\d{2}$
+                    details:
+                      type: string
+                      minLength: 10
+                  required:
+                    - name
+                    - email
+                    - type
+                    - productName
+                    - purchaseDate
+                    - details
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    email:
+                      type: string
+                      format: email
+                    phone:
+                      type: string
+                      pattern: ^[0-9-]{10,}$
+                    type:
+                      type: string
+                      enum:
+                        - technical
+                    environment:
+                      type: object
+                      properties:
+                        os:
+                          type: string
+                          minLength: 1
+                        browser:
+                          type: string
+                          minLength: 1
+                        version:
+                          type: string
+                      required:
+                        - os
+                    errorMessage:
+                      type: string
+                    details:
+                      type: string
+                      minLength: 10
+                  required:
+                    - name
+                    - email
+                    - type
+                    - environment
+                    - details
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                    email:
+                      type: string
+                      format: email
+                    phone:
+                      type: string
+                      pattern: ^[0-9-]{10,}$
+                    type:
+                      type: string
+                      enum:
+                        - general
+                    subject:
+                      type: string
+                      minLength: 1
+                    details:
+                      type: string
+                      minLength: 10
+                  required:
+                    - name
+                    - email
+                    - type
+                    - subject
+                    - details
+      responses:
+        "204":
+          description: 登録成功
+webhooks: {}

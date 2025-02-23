@@ -1,0 +1,14 @@
+{
+  "name": "react-zod-openapi",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspace frontend & npm run dev --workspace backend"
+  }
+}
