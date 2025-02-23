@@ -11,9 +11,11 @@ app.get("/", (c) => {
 });
 
 app.get("/contact", (c) => {
-  return c.json<ContactType>({
-    id: "1",
-  });
+  return c.json<ContactType[]>([
+    {
+      id: "1",
+    },
+  ]);
 });
 
 app.post("/contact", zValidator("json", contactFormSchema), (c) => {
