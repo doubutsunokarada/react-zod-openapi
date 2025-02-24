@@ -29,7 +29,7 @@ const contactRoutes: RouteConfig[] = [
     request: {
       body: { content: { "application/json": { schema: contactFormSchema } } },
     },
-    responses: { 204: { description: "登録成功" } },
+    responses: { 201: { description: "登録成功" } },
   },
 ];
 
